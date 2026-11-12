@@ -258,9 +258,16 @@
     document.addEventListener("click", function (event) {
       const toggle = event.target.closest("[data-auth-toggle]");
       if (!toggle) return;
+      const wasAdmin = document.body.classList.contains("admin-logged-in");
       setTimeout(function () {
         const session = getSession();
-        if (!session || !session.is_admin) showDashboard(false);
+        if (!session || !session.is_admin) {
+          if (wasAdmin) {
+            location.href = "index.html";
+            return;
+          }
+          showDashboard(false);
+        }
       }, 0);
     });
 

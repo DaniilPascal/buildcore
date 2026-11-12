@@ -34,6 +34,8 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   font-family: var(--font);
   font-size: 1.05rem;
   font-weight: 500;
@@ -45,6 +47,11 @@ body {
     linear-gradient(180deg, #080512 0%, #06040d 55%, #04030a 100%);
   line-height: 1.55;
   position: relative;
+}
+
+body > main {
+  flex: 1 0 auto;
+  width: 100%;
 }
 
 body::before {
@@ -647,18 +654,23 @@ textarea:focus-visible {
 }
 
 .site-footer {
-  border-top: 1px solid var(--line);
-  background: rgba(4, 3, 10, 0.92);
+  flex-shrink: 0;
+  width: 100%;
   margin-top: auto;
-  box-shadow: 0 -1px 0 rgba(255, 43, 214, 0.12);
+  border: 0;
+  border-top: 1px solid rgba(0, 240, 255, 0.28);
+  border-radius: 0;
+  background: #0a0614;
+  box-shadow: none;
 }
 
 .footer-inner {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-items: center;
   gap: 1rem;
-  padding: 1.4rem 0;
+  padding: 1.1rem 0;
   color: var(--muted);
 }
 

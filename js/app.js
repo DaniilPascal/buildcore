@@ -581,9 +581,9 @@
   }
 
   async function loadCurrency(amountRub, targetSelector) {
-    const ratesBox = document.querySelector("[data-rates]");
     const priceTargets = document.querySelectorAll(targetSelector || "[data-fx-price]");
-    if (!ratesBox && !priceTargets.length) return;
+    if (!priceTargets.length) return;
+    if (!(typeof amountRub === "number" && amountRub > 0)) return;
 
     try {
       const response = await fetch("https://www.cbr-xml-daily.ru/daily_json.js");
@@ -591,45 +591,17 @@
       const data = await response.json();
       const usd = data.Valute.USD.Value;
       const eur = data.Valute.EUR.Value;
-
-      if (ratesBox) {
-        ratesBox.innerHTML =
-          "<strong>Курс ЦБ РФ на сегодня</strong>" +
-          "<span>1 USD = " + usd.toFixed(2) + " ₽</span>" +
-          "<span>1 EUR = " + eur.toFixed(2) + " ₽</span>";
-      }
-
-      if (typeof amountRub === "number" && amountRub > 0) {
-        const text =
-          "≈ " +
-          (amountRub / usd).toFixed(2) +
-          " USD · " +
-          (amountRub / eur).toFixed(2) +
-          " EUR";
-        priceTargets.forEach(function (el) {
-          el.textContent = text;
-        });
-      }
+      const text =
+        "≈ " +
+        (amountRub / usd).toFixed(2) +
+        " USD · " +
+        (amountRub / eur).toFixed(2) +
+        " EUR";
+      priceTargets.forEach(function (el) {
+        el.textContent = text;
+      });
     } catch (error) {
-      if (ratesBox) {
-        ratesBox.textContent = "Не удалось загрузить курс валют. Проверьте интернет.";
-      }
-    }
-  }
-
-  async function loadWeather() {
-    const box = document.querySelector("[data-weather]");
-    if (!box) return;
-    try {
-      const url =
-        "https://api.open-meteo.com/v1/forecast?latitude=55.7512&longitude=37.6184&current=temperature_2m,weather_code&timezone=Europe%2FMoscow";
-      const response = await fetch(url);
-      if (!response.ok) throw new Error("weather failed");
-      const data = await response.json();
-      const temp = data.current.temperature_2m;
-      box.textContent = "Сейчас у магазина около " + temp + "°C (Open-Meteo)";
-    } catch (error) {
-      box.textContent = "Погоду загрузить не удалось.";
+      // курс на карточке товара необязателен
     }
   }
 
@@ -642,8 +614,6 @@
     renderProductPage();
     renderCartPage();
     bindContactsForm();
-    loadCurrency(0);
-    loadWeather();
   }
 
   document.addEventListener("DOMContentLoaded", init);

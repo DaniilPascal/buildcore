@@ -4,11 +4,11 @@
     if (!mapNode || typeof L === "undefined") return;
 
     const coords = [55.751244, 37.618423];
-    const map = L.map(mapNode).setView(coords, 14);
+    const map = L.map(mapNode, { attributionControl: false }).setView(coords, 14);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      attribution: "",
     }).addTo(map);
 
     L.marker(coords)

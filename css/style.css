@@ -841,18 +841,6 @@ textarea:focus-visible {
   min-width: auto;
 }
 
-.rates-box,
-.weather-box {
-  display: grid;
-  gap: 0.35rem;
-  margin-top: 1rem;
-  padding: 0.9rem 1rem;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--line);
-  color: var(--muted);
-}
-
 #store-map {
   width: 100%;
   height: 280px;
@@ -863,6 +851,38 @@ textarea:focus-visible {
 
 .leaflet-container {
   font: inherit;
+}
+
+.leaflet-control-attribution {
+  display: none !important;
+}
+
+.contact-form .field input,
+.contact-form .field select {
+  width: 100%;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
+  box-sizing: border-box;
+  padding: 0 0.8rem;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.contact-form .field select {
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 16px) calc(50% - 3px), calc(100% - 11px) calc(50% - 3px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 2rem;
+}
+
+.contact-form .field textarea {
+  height: auto;
+  min-height: 120px;
+  max-height: none;
+  padding: 0.65rem 0.8rem;
 }
 
 @media (max-width: 700px) {

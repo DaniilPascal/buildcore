@@ -788,7 +788,7 @@ textarea:focus-visible {
   justify-content: space-between;
   gap: 1rem;
   align-items: stretch;
-  margin-bottom: 1rem;
+  margin: 1.25rem 0 0.75rem;
 }
 
 .db-stats {
@@ -813,37 +813,59 @@ textarea:focus-visible {
   color: var(--accent);
 }
 
+.db-section {
+  margin-top: 1.5rem;
+}
+
+.db-section .section-title {
+  margin-bottom: 0.65rem;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
 .db-panel {
   padding: 0;
   overflow: hidden;
 }
 
 .db-scroll {
-  overflow-x: auto;
+  overflow: auto;
+  max-height: min(52vh, 520px);
 }
 
 .db-table {
   margin: 0;
+  width: 100%;
   min-width: 640px;
+  border-collapse: collapse;
 }
 
 .db-table th {
   position: sticky;
   top: 0;
+  z-index: 1;
   background: #101827;
   color: var(--accent);
   font-family: var(--display);
   letter-spacing: 0.02em;
+  text-align: left;
 }
 
 .db-table td,
 .db-table th {
   padding: 0.85rem 1rem;
   white-space: nowrap;
+  border-bottom: 1px solid var(--line);
 }
 
 .db-table tbody tr:nth-child(even) {
   background: rgba(255, 255, 255, 0.02);
+}
+
+.db-table tbody tr:hover {
+  background: rgba(94, 234, 212, 0.06);
 }
 
 @media (max-width: 700px) {

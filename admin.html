@@ -52,11 +52,6 @@
     </section>
 
     <div id="admin-dashboard" hidden>
-      <div class="page-intro" style="padding-top: 0.5rem;">
-        <h1>БД</h1>
-        <p>База клиентов и заявок на сборку.</p>
-      </div>
-
       <div class="db-toolbar">
         <div class="db-stats">
           <div class="db-stat">
@@ -74,13 +69,12 @@
         </div>
         <div class="actions">
           <button type="button" class="button button-secondary" id="reload-admin">Обновить</button>
-          <button type="button" class="button button-secondary" id="admin-logout">Выйти</button>
         </div>
       </div>
       <p class="form-status" data-admin-status></p>
 
-      <section class="section">
-        <h2 class="section-title">Таблица clients / users</h2>
+      <section class="section db-section">
+        <h2 class="section-title">users</h2>
         <div class="panel db-panel">
           <div class="db-scroll">
             <table class="build-table db-table">
@@ -99,8 +93,8 @@
         </div>
       </section>
 
-      <section class="section">
-        <h2 class="section-title">Таблица orders</h2>
+      <section class="section db-section">
+        <h2 class="section-title">orders</h2>
         <div class="panel db-panel">
           <div class="db-scroll">
             <table class="build-table db-table">
@@ -261,9 +255,14 @@
     });
 
     document.getElementById("reload-admin").addEventListener("click", loadAdminData);
-    document.getElementById("admin-logout").addEventListener("click", function () {
-      setSession(null);
-      showDashboard(false);
+
+    document.addEventListener("click", function (event) {
+      const toggle = event.target.closest("[data-auth-toggle]");
+      if (!toggle) return;
+      setTimeout(function () {
+        const session = getSession();
+        if (!session || !session.is_admin) showDashboard(false);
+      }, 0);
     });
 
     document.addEventListener("DOMContentLoaded", function () {

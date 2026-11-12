@@ -88,9 +88,8 @@
     tools.className = "header-tools";
     tools.innerHTML =
       '<a class="cart-link" href="cart.html">Сборка <span class="cart-badge" data-cart-badge>0</span></a>' +
-      '<button type="button" class="button button-secondary button-small" data-auth-open>Войти</button>' +
       '<span class="user-chip" data-user-chip hidden></span>' +
-      '<button type="button" class="button button-secondary button-small" data-logout hidden>Выйти</button>';
+      '<button type="button" class="button button-secondary button-small auth-toggle" data-auth-toggle>Войти</button>';
     headerInner.appendChild(tools);
 
     if (!document.getElementById("auth-modal")) {
@@ -100,12 +99,12 @@
       modal.hidden = true;
       modal.innerHTML =
         '<div class="modal-backdrop" data-auth-close></div>' +
-        '<div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="auth-title">' +
+        '<div class="modal-dialog auth-dialog" role="dialog" aria-modal="true" aria-labelledby="auth-title">' +
         '<button type="button" class="modal-close" data-auth-close aria-label="Закрыть">×</button>' +
-        '<h2 id="auth-title">Вход и регистрация</h2>' +
-        '<div class="auth-tabs">' +
-        '<button type="button" class="auth-tab is-active" data-auth-tab="login">Вход</button>' +
-        '<button type="button" class="auth-tab" data-auth-tab="register">Регистрация</button>' +
+        '<h2 id="auth-title">Вход</h2>' +
+        '<div class="auth-tabs" role="tablist">' +
+        '<button type="button" class="auth-tab is-active" data-auth-tab="login" role="tab" aria-selected="true">Вход</button>' +
+        '<button type="button" class="auth-tab" data-auth-tab="register" role="tab" aria-selected="false">Регистрация</button>' +
         "</div>" +
         '<form id="login-form" class="auth-form">' +
         '<div class="field"><label for="login-email">Email или логин</label><input id="login-email" type="text" required placeholder="you@example.com"></div>' +
@@ -117,7 +116,7 @@
         '<div class="field"><label for="register-name">Имя</label><input id="register-name" type="text" required minlength="2"></div>' +
         '<div class="field"><label for="register-email">Email</label><input id="register-email" type="email" required></div>' +
         '<div class="field"><label for="register-password">Пароль</label><input id="register-password" type="password" required minlength="4"></div>' +
-        '<button class="button button-primary" type="submit">Зарегистрироваться</button>' +
+        '<button class="button button-primary" type="submit">Создать аккаунт</button>' +
         '<p class="form-status" data-register-status></p>' +
         "</form>" +
         "</div>";
@@ -136,31 +135,44 @@
 
   function updateAuthUi() {
     const session = getSession();
-    const openBtn = document.querySelector("[data-auth-open]");
+    const toggleBtn = document.querySelector("[data-auth-toggle]");
     const chip = document.querySelector("[data-user-chip]");
-    const logoutBtn = document.querySelector("[data-logout]");
-    if (!openBtn || !chip || !logoutBtn) return;
+    if (!toggleBtn || !chip) return;
 
     if (session) {
-      openBtn.hidden = true;
-      logoutBtn.hidden = false;
+      toggleBtn.textContent = "Выйти";
+      toggleBtn.setAttribute("data-auth-mode", "logout");
       chip.hidden = false;
       chip.textContent = session.is_admin ? session.name + " · админ" : session.name;
       const adminLink = document.querySelector("[data-admin-link]");
       if (adminLink) adminLink.hidden = !session.is_admin;
     } else {
-      const adminLink = document.querySelector("[data-admin-link]");
-      if (adminLink) adminLink.hidden = true;
-      openBtn.hidden = false;
-      logoutBtn.hidden = true;
+      toggleBtn.textContent = "Войти";
+      toggleBtn.setAttribute("data-auth-mode", "login");
       chip.hidden = true;
       chip.textContent = "";
+      const adminLink = document.querySelector("[data-admin-link]");
+      if (adminLink) adminLink.hidden = true;
     }
+  }
+
+  function setAuthTab(mode) {
+    document.querySelectorAll("[data-auth-tab]").forEach(function (btn) {
+      const active = btn.getAttribute("data-auth-tab") === mode;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-selected", active ? "true" : "false");
+    });
+    const title = document.getElementById("auth-title");
+    if (title) title.textContent = mode === "register" ? "Регистрация" : "Вход";
+    document.getElementById("login-form").hidden = mode !== "login";
+    document.getElementById("register-form").hidden = mode !== "register";
   }
 
   function openAuthModal() {
     const modal = document.getElementById("auth-modal");
-    if (modal) modal.hidden = false;
+    if (!modal) return;
+    setAuthTab("login");
+    modal.hidden = false;
   }
 
   function closeAuthModal() {
@@ -173,22 +185,21 @@
       const target = event.target;
       if (!(target instanceof Element)) return;
 
-      if (target.closest("[data-auth-open]")) openAuthModal();
-      if (target.closest("[data-auth-close]")) closeAuthModal();
-      if (target.closest("[data-logout]")) {
-        setSession(null);
-        updateAuthUi();
-        toast("Вы вышли из аккаунта");
+      const toggle = target.closest("[data-auth-toggle]");
+      if (toggle) {
+        if (toggle.getAttribute("data-auth-mode") === "logout" || getSession()) {
+          setSession(null);
+          updateAuthUi();
+          toast("Вы вышли из аккаунта");
+        } else {
+          openAuthModal();
+        }
       }
+      if (target.closest("[data-auth-close]")) closeAuthModal();
 
       const tab = target.closest("[data-auth-tab]");
       if (tab) {
-        const mode = tab.getAttribute("data-auth-tab");
-        document.querySelectorAll("[data-auth-tab]").forEach(function (btn) {
-          btn.classList.toggle("is-active", btn === tab);
-        });
-        document.getElementById("login-form").hidden = mode !== "login";
-        document.getElementById("register-form").hidden = mode !== "register";
+        setAuthTab(tab.getAttribute("data-auth-tab"));
       }
     });
 

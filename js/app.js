@@ -108,17 +108,17 @@
         "</div>" +
         '<div class="auth-pane" data-auth-pane="login">' +
         '<form id="login-form" class="auth-form">' +
-        '<div class="field"><label for="login-email">Email или логин</label><input id="login-email" type="text" required placeholder="you@example.com"></div>' +
-        '<div class="field"><label for="login-password">Пароль</label><input id="login-password" type="password" required minlength="4"></div>' +
+        '<div class="field"><label for="login-email">Email или логин</label><input id="login-email" type="text" required placeholder="ivan@mail.ru"></div>' +
+        '<div class="field"><label for="login-password">Пароль</label><input id="login-password" type="password" required minlength="4" placeholder="Не менее 4 символов"></div>' +
         '<button class="button button-primary" type="submit">Войти</button>' +
         '<p class="form-status" data-login-status></p>' +
         "</form>" +
         "</div>" +
         '<div class="auth-pane" data-auth-pane="register" hidden>' +
         '<form id="register-form" class="auth-form">' +
-        '<div class="field"><label for="register-name">Имя</label><input id="register-name" type="text" required minlength="2"></div>' +
-        '<div class="field"><label for="register-email">Email</label><input id="register-email" type="email" required></div>' +
-        '<div class="field"><label for="register-password">Пароль</label><input id="register-password" type="password" required minlength="4"></div>' +
+        '<div class="field"><label for="register-name">Имя</label><input id="register-name" type="text" required minlength="2" placeholder="Иван"></div>' +
+        '<div class="field"><label for="register-email">Email</label><input id="register-email" type="email" required placeholder="ivan@mail.ru"></div>' +
+        '<div class="field"><label for="register-password">Пароль</label><input id="register-password" type="password" required minlength="4" placeholder="Например, qwerty123"></div>' +
         '<button class="button button-primary" type="submit">Создать аккаунт</button>' +
         '<p class="form-status" data-register-status></p>' +
         "</form>" +

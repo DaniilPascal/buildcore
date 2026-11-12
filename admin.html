@@ -22,8 +22,10 @@
           <li><a href="catalog.html">Каталог</a></li>
           <li><a href="cart.html">Сборка</a></li>
           <li><a href="contacts.html">Контакты</a></li>
-          <li><a href="admin.html" data-admin-tab="home" id="nav-panel">Панель</a></li>
-          <li class="nav-bd-item" id="nav-bd"><a href="admin.html#bd" data-admin-tab="bd">БД</a></li>
+          <li><a href="admin.html" aria-current="page">Панель</a></li>
+          <li class="nav-bd-item" id="nav-bd" hidden>
+            <a href="admin.html#bd" aria-current="page">БД</a>
+          </li>
         </ul>
       </nav>
     </div>
@@ -50,68 +52,72 @@
     </section>
 
     <div id="admin-dashboard" hidden>
-      <div class="admin-tabs" role="tablist">
-        <button type="button" class="is-active" data-admin-tab="home" role="tab">Обзор</button>
-        <button type="button" data-admin-tab="bd" role="tab">БД</button>
+      <div class="page-intro" style="padding-top: 0.5rem;">
+        <h1>БД</h1>
+        <p>База клиентов и заявок на сборку.</p>
       </div>
 
-      <section class="admin-pane" data-admin-pane="home">
-        <div class="page-intro" style="padding-top: 0;">
-          <h1>Панель управления</h1>
-          <p>Откройте вкладку <strong>БД</strong>, чтобы посмотреть клиентов и заявки.</p>
+      <div class="db-toolbar">
+        <div class="db-stats">
+          <div class="db-stat">
+            <span class="muted">Клиенты</span>
+            <strong data-stat-users>0</strong>
+          </div>
+          <div class="db-stat">
+            <span class="muted">Заявки</span>
+            <strong data-stat-orders>0</strong>
+          </div>
+          <div class="db-stat">
+            <span class="muted">Сумма заявок</span>
+            <strong data-stat-total>0 ₽</strong>
+          </div>
         </div>
         <div class="actions">
-          <button type="button" class="button button-primary" data-admin-tab="bd">Открыть БД</button>
+          <button type="button" class="button button-secondary" id="reload-admin">Обновить</button>
           <button type="button" class="button button-secondary" id="admin-logout">Выйти</button>
         </div>
-      </section>
+      </div>
+      <p class="form-status" data-admin-status></p>
 
-      <section class="admin-pane" data-admin-pane="bd" hidden>
-        <div class="page-intro" style="padding-top: 0;">
-          <h1>БД</h1>
-          <p>Клиенты и заявки на сборку.</p>
-        </div>
-        <div class="actions" style="margin-bottom: 1rem;">
-          <button type="button" class="button button-secondary" id="reload-admin">Обновить</button>
-        </div>
-        <p class="form-status" data-admin-status></p>
-
-        <section class="section">
-          <h2 class="section-title">Клиенты</h2>
-          <div class="panel">
-            <table class="build-table">
+      <section class="section">
+        <h2 class="section-title">Таблица clients / users</h2>
+        <div class="panel db-panel">
+          <div class="db-scroll">
+            <table class="build-table db-table">
               <thead>
                 <tr>
-                  <th scope="col">№</th>
-                  <th scope="col">Имя</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Роль</th>
-                  <th scope="col">Дата</th>
+                  <th scope="col">id</th>
+                  <th scope="col">name</th>
+                  <th scope="col">email</th>
+                  <th scope="col">role</th>
+                  <th scope="col">created_at</th>
                 </tr>
               </thead>
               <tbody id="users-body"></tbody>
             </table>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="section">
-          <h2 class="section-title">Заявки на сборку</h2>
-          <div class="panel">
-            <table class="build-table">
+      <section class="section">
+        <h2 class="section-title">Таблица orders</h2>
+        <div class="panel db-panel">
+          <div class="db-scroll">
+            <table class="build-table db-table">
               <thead>
                 <tr>
-                  <th scope="col">№</th>
-                  <th scope="col">Клиент</th>
-                  <th scope="col">Телефон</th>
-                  <th scope="col">Сумма</th>
-                  <th scope="col">Состав</th>
-                  <th scope="col">Дата</th>
+                  <th scope="col">id</th>
+                  <th scope="col">user</th>
+                  <th scope="col">phone</th>
+                  <th scope="col">total</th>
+                  <th scope="col">items</th>
+                  <th scope="col">created_at</th>
                 </tr>
               </thead>
               <tbody id="orders-body"></tbody>
             </table>
           </div>
-        </section>
+        </div>
       </section>
     </div>
   </main>
@@ -143,28 +149,13 @@
       document.getElementById("admin-login-panel").hidden = show;
       document.getElementById("admin-dashboard").hidden = !show;
       document.body.classList.toggle("admin-logged-in", show);
+      const navBd = document.getElementById("nav-bd");
+      if (navBd) navBd.hidden = !show;
       const chip = document.querySelector("[data-user-chip]");
       if (chip) {
         chip.hidden = true;
         chip.textContent = "";
       }
-    }
-
-    function setAdminTab(tab) {
-      document.querySelectorAll("[data-admin-tab]").forEach(function (el) {
-        if (el.tagName === "BUTTON" || el.tagName === "A") {
-          const active = el.getAttribute("data-admin-tab") === tab;
-          el.classList.toggle("is-active", active);
-          if (el.tagName === "A") {
-            if (active) el.setAttribute("aria-current", "page");
-            else el.removeAttribute("aria-current");
-          }
-        }
-      });
-      document.querySelectorAll("[data-admin-pane]").forEach(function (pane) {
-        pane.hidden = pane.getAttribute("data-admin-pane") !== tab;
-      });
-      if (tab === "bd") loadAdminData();
     }
 
     async function loadAdminData() {
@@ -186,22 +177,32 @@
         }
         const usersData = await usersResp.json();
         const ordersData = await ordersResp.json();
+        const users = usersData.users || [];
+        const orders = ordersData.orders || [];
+        const total = orders.reduce(function (sum, order) {
+          return sum + (Number(order.total) || 0);
+        }, 0);
 
-        document.getElementById("users-body").innerHTML = (usersData.users || [])
+        document.querySelector("[data-stat-users]").textContent = String(users.length);
+        document.querySelector("[data-stat-orders]").textContent = String(orders.length);
+        document.querySelector("[data-stat-total]").textContent =
+          new Intl.NumberFormat("ru-RU").format(total) + " ₽";
+
+        document.getElementById("users-body").innerHTML = users
           .map(function (user) {
             return (
               "<tr>" +
               "<td>" + user.id + "</td>" +
               "<td>" + user.name + "</td>" +
               "<td>" + user.email + "</td>" +
-              "<td>" + (user.is_admin ? "Сотрудник" : "Клиент") + "</td>" +
+              "<td>" + (user.is_admin ? "admin" : "client") + "</td>" +
               "<td>" + user.created_at + "</td>" +
               "</tr>"
             );
           })
-          .join("") || "<tr><td colspan='5'>Пока нет пользователей</td></tr>";
+          .join("") || "<tr><td colspan='5'>Пусто</td></tr>";
 
-        document.getElementById("orders-body").innerHTML = (ordersData.orders || [])
+        document.getElementById("orders-body").innerHTML = orders
           .map(function (order) {
             const items = (order.items || [])
               .map(function (item) { return item.name + " ×" + item.qty; })
@@ -212,14 +213,14 @@
               "<td>" + (order.user_name || order.user_id) + "<br><span class='muted'>" + (order.user_email || "") + "</span></td>" +
               "<td>" + order.phone + "</td>" +
               "<td>" + new Intl.NumberFormat("ru-RU").format(order.total) + " ₽</td>" +
-              "<td>" + items + "</td>" +
+              "<td>" + (items || "—") + "</td>" +
               "<td>" + order.created_at + "</td>" +
               "</tr>"
             );
           })
-          .join("") || "<tr><td colspan='6'>Пока нет заявок</td></tr>";
+          .join("") || "<tr><td colspan='6'>Пусто</td></tr>";
 
-        status.textContent = "Данные обновлены";
+        status.textContent = "База загружена";
         status.className = "form-status is-ok";
       } catch (error) {
         status.textContent = error.message || "Ошибка загрузки";
@@ -252,20 +253,10 @@
         status.textContent = "Вход выполнен";
         status.className = "form-status is-ok";
         showDashboard(true);
-        setAdminTab(location.hash === "#bd" ? "bd" : "home");
+        loadAdminData();
       } catch (error) {
         status.textContent = error.message;
         status.className = "form-status is-error";
-      }
-    });
-
-    document.addEventListener("click", function (event) {
-      const tab = event.target.closest("[data-admin-tab]");
-      if (!tab) return;
-      event.preventDefault();
-      setAdminTab(tab.getAttribute("data-admin-tab"));
-      if (tab.getAttribute("data-admin-tab") === "bd") {
-        location.hash = "bd";
       }
     });
 
@@ -273,14 +264,13 @@
     document.getElementById("admin-logout").addEventListener("click", function () {
       setSession(null);
       showDashboard(false);
-      location.hash = "";
     });
 
     document.addEventListener("DOMContentLoaded", function () {
       const session = getSession();
       if (session && session.is_admin) {
         showDashboard(true);
-        setAdminTab(location.hash === "#bd" ? "bd" : "home");
+        loadAdminData();
       } else {
         showDashboard(false);
       }

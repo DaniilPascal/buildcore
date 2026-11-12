@@ -137,6 +137,25 @@
     });
   }
 
+  function syncAdminNav(isAdmin) {
+    const navList = document.querySelector(".site-nav ul");
+    if (!navList) return;
+
+    let item = document.getElementById("nav-bd");
+    if (isAdmin) {
+      if (!item) {
+        item = document.createElement("li");
+        item.id = "nav-bd";
+        item.className = "nav-bd-item";
+        item.innerHTML = '<a href="admin.html#bd">БД</a>';
+        navList.appendChild(item);
+      }
+      item.hidden = false;
+    } else if (item) {
+      item.hidden = true;
+    }
+  }
+
   function updateAuthUi() {
     const session = getSession();
     const toggleBtn = document.querySelector("[data-auth-toggle]");
@@ -153,6 +172,7 @@
         chip.hidden = false;
         chip.textContent = session.name;
       }
+      syncAdminNav(!!session.is_admin);
       const adminLink = document.querySelector("[data-admin-link]");
       if (adminLink) adminLink.hidden = !session.is_admin;
     } else {
@@ -160,6 +180,7 @@
       toggleBtn.setAttribute("data-auth-mode", "login");
       chip.hidden = true;
       chip.textContent = "";
+      syncAdminNav(false);
       const adminLink = document.querySelector("[data-admin-link]");
       if (adminLink) adminLink.hidden = true;
     }

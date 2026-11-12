@@ -782,35 +782,74 @@ textarea:focus-visible {
   margin-top: 0.2rem;
 }
 
-.admin-tabs {
+.db-toolbar {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
-  margin: 0 0 1.2rem;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: stretch;
+  margin-bottom: 1rem;
 }
 
-.admin-tabs a,
-.admin-tabs button {
-  display: inline-flex;
-  align-items: center;
-  min-height: 40px;
-  padding: 0.45rem 0.9rem;
-  border-radius: 999px;
+.db-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  flex: 1 1 420px;
+}
+
+.db-stat {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
   border: 1px solid var(--line);
-  background: transparent;
-  color: var(--muted);
-  font: inherit;
-  font-weight: 700;
-  cursor: pointer;
-  text-decoration: none;
+  background: var(--bg-elevated);
 }
 
-.admin-tabs a.is-active,
-.admin-tabs a[aria-current="page"],
-.admin-tabs button.is-active {
-  background: var(--accent-soft);
-  color: var(--text);
-  border-color: transparent;
+.db-stat strong {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  color: var(--accent);
+}
+
+.db-panel {
+  padding: 0;
+  overflow: hidden;
+}
+
+.db-scroll {
+  overflow-x: auto;
+}
+
+.db-table {
+  margin: 0;
+  min-width: 640px;
+}
+
+.db-table th {
+  position: sticky;
+  top: 0;
+  background: #101827;
+  color: var(--accent);
+  font-family: var(--display);
+  letter-spacing: 0.02em;
+}
+
+.db-table td,
+.db-table th {
+  padding: 0.85rem 1rem;
+  white-space: nowrap;
+}
+
+.db-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+@media (max-width: 700px) {
+  .db-stats {
+    grid-template-columns: 1fr;
+  }
 }
 
 .form-status {

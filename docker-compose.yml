@@ -1,0 +1,14 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: "8000"
+      BUILDCORE_RELOAD: "0"
+    volumes:
+      - buildcore-data:/app/database
+    restart: unless-stopped
+
+volumes:
+  buildcore-data:

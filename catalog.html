@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Каталог комплектующих — BuildCore</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">
+        <img src="images/logo.svg" width="42" height="42" alt="Логотип BuildCore">
+        <span>BuildCore</span>
+      </a>
+      <nav class="site-nav" aria-label="Основное меню">
+        <ul>
+          <li><a href="index.html">Главная</a></li>
+          <li><a href="catalog.html" aria-current="page">Каталог</a></li>
+          <li><a href="product.html">Товар</a></li>
+          <li><a href="cart.html">Сборка</a></li>
+          <li><a href="contacts.html">Контакты</a></li>
+          <li><a href="db.html">БД</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-intro">
+      <h1>Каталог комплектующих</h1>
+      <p>Полный перечень позиций для сборки ПК. Фильтрация, поиск и сортировка работают на клиенте.</p>
+      <p class="muted" data-catalog-count>Найдено: 0</p>
+    </div>
+
+    <form class="filters" aria-label="Фильтры каталога">
+      <div class="field">
+        <label for="category">Категория</label>
+        <select id="category" name="category">
+          <option value="all">Все категории</option>
+          <option value="cpu">Процессоры</option>
+          <option value="gpu">Видеокарты</option>
+          <option value="ram">Память</option>
+          <option value="mb">Материнские платы</option>
+          <option value="ssd">Накопители</option>
+          <option value="psu">Блоки питания</option>
+          <option value="case">Корпуса</option>
+          <option value="cooler">Охлаждение</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="price">Цена до, ₽</label>
+        <input id="price" name="price" type="number" value="70000" min="1000" step="500">
+      </div>
+      <div class="field">
+        <label for="sort">Сортировка</label>
+        <select id="sort" name="sort">
+          <option value="name">По названию</option>
+          <option value="price-asc">Сначала дешевле</option>
+          <option value="price-desc">Сначала дороже</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="search">Поиск</label>
+        <input id="search" name="search" type="search" placeholder="Например, RTX">
+      </div>
+    </form>
+
+    <section class="section" aria-label="Список товаров">
+      <div class="catalog-grid" data-catalog-grid></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>BuildCore · подбор комплектующих для компьютера</p>
+      <p>Практическая работа №3 · FastAPI и SQLite</p>
+    </div>
+  </footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

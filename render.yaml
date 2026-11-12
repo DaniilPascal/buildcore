@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: buildcore
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: BUILDCORE_RELOAD
+        value: "0"

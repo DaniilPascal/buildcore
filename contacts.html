@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Контакты — BuildCore</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">
+        <img src="images/logo.svg" width="42" height="42" alt="Логотип BuildCore">
+        <span>BuildCore</span>
+      </a>
+      <nav class="site-nav" aria-label="Основное меню">
+        <ul>
+          <li><a href="index.html">Главная</a></li>
+          <li><a href="catalog.html">Каталог</a></li>
+          <li><a href="product.html">Товар</a></li>
+          <li><a href="cart.html">Сборка</a></li>
+          <li><a href="contacts.html" aria-current="page">Контакты</a></li>
+          <li><a href="db.html">БД</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-intro">
+      <h1>Контакты</h1>
+      <p>Слоган проекта: «Собери мощный ПК без угадываний». Здесь же — карта магазина, погода и рабочая форма обратной связи.</p>
+    </div>
+
+    <section class="contacts-layout">
+      <aside class="panel">
+        <ul class="contact-list">
+          <li>
+            <strong>Адрес</strong>
+            Москва, ул. Технопарковая, 7, павильон C
+          </li>
+          <li>
+            <strong>Телефон</strong>
+            <a href="tel:+74951234567">+7 (495) 123-45-67</a>
+          </li>
+          <li>
+            <strong>Email</strong>
+            <a href="mailto:hello@buildcore.local">hello@buildcore.local</a>
+          </li>
+          <li>
+            <strong>Режим работы</strong>
+            Пн–Сб: 10:00–20:00 · Вс: выходной
+          </li>
+          <li>
+            <strong>Слоган</strong>
+            Собери мощный ПК без угадываний
+          </li>
+        </ul>
+        <div class="rates-box" data-rates>Загрузка курса ЦБ…</div>
+        <div class="weather-box" data-weather>Загрузка погоды…</div>
+        <div id="store-map" aria-label="Карта магазина BuildCore"></div>
+      </aside>
+
+      <div class="form-panel">
+        <h2 class="section-title">Форма обратной связи</h2>
+        <p class="muted">Сообщение сохраняется в браузере. В ПР 3 оно будет уходить на сервер.</p>
+        <form id="feedback-form" action="#" method="post">
+          <div class="field">
+            <label for="name">Имя</label>
+            <input id="name" name="name" type="text" placeholder="Иван" required minlength="2">
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="ivan@example.com" required>
+          </div>
+          <div class="field">
+            <label for="topic">Тема</label>
+            <select id="topic" name="topic" required>
+              <option value="compatibility">Вопрос по совместимости</option>
+              <option value="build">Заявка на сборку</option>
+              <option value="other">Другое</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="message">Сообщение</label>
+            <textarea id="message" name="message" placeholder="Опишите задачу" required minlength="10"></textarea>
+          </div>
+          <button class="button button-primary" type="submit">Отправить</button>
+          <p class="form-status" data-feedback-status></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>BuildCore · подбор комплектующих для компьютера</p>
+      <p>Практическая работа №3 · FastAPI и SQLite</p>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/map.js"></script>
+</body>
+</html>

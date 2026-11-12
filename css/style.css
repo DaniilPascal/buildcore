@@ -951,9 +951,9 @@ textarea:focus-visible {
 
 .db-stats {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.75rem;
-  flex: 1 1 420px;
+  flex: 1 1 520px;
 }
 
 .db-stat {
@@ -1027,6 +1027,12 @@ textarea:focus-visible {
 
 .db-table tbody tr:hover {
   background: rgba(0, 240, 255, 0.07);
+}
+
+@media (max-width: 900px) {
+  .db-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 700px) {

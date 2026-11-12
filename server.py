@@ -127,6 +127,13 @@ class OrderIn(BaseModel):
     total: int = Field(ge=0)
 
 
+class FeedbackIn(BaseModel):
+    name: str = Field(min_length=2)
+    email: str
+    topic: str = ""
+    message: str = Field(min_length=10)
+
+
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     init_db()
@@ -296,6 +303,48 @@ def list_orders(admin_id: int | None = None, user_id: int | None = None) -> dict
             item["user_name"] = row["user_name"]
             orders.append(item)
         return {"ok": True, "orders": orders}
+    finally:
+        conn.close()
+
+
+@app.post("/api/feedback")
+def create_feedback(payload: FeedbackIn) -> dict[str, Any]:
+    name = payload.name.strip()
+    email = payload.email.strip().lower()
+    topic = payload.topic.strip()
+    message = payload.message.strip()
+    if "@" not in email or "." not in email:
+        raise HTTPException(status_code=400, detail="Введите корректный email")
+    if len(message) < 10:
+        raise HTTPException(status_code=400, detail="Сообщение слишком короткое")
+
+    conn = get_connection()
+    try:
+        cur = conn.execute(
+            """
+            INSERT INTO feedback (name, email, topic, message)
+            VALUES (?, ?, ?, ?)
+            """,
+            (name, email, topic, message),
+        )
+        conn.commit()
+        row = conn.execute(
+            "SELECT * FROM feedback WHERE id = ?", (cur.lastrowid,)
+        ).fetchone()
+        return {"ok": True, "feedback": dict(row)}
+    finally:
+        conn.close()
+
+
+@app.get("/api/feedback")
+def list_feedback(admin_id: int | None = None) -> dict[str, Any]:
+    require_admin(admin_id)
+    conn = get_connection()
+    try:
+        rows = conn.execute(
+            "SELECT * FROM feedback ORDER BY id DESC"
+        ).fetchall()
+        return {"ok": True, "feedback": [dict(row) for row in rows]}
     finally:
         conn.close()
 

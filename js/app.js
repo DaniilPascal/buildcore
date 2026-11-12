@@ -595,23 +595,30 @@
     const form = document.getElementById("feedback-form");
     if (!form) return;
 
-    form.addEventListener("submit", function (event) {
+    form.addEventListener("submit", async function (event) {
       event.preventDefault();
+      const status = document.querySelector("[data-feedback-status]");
       const payload = {
         name: document.getElementById("name").value.trim(),
         email: document.getElementById("email").value.trim(),
         topic: document.getElementById("topic").value,
         message: document.getElementById("message").value.trim(),
-        createdAt: new Date().toISOString(),
       };
-      const messages = readJson(STORAGE.messages, []);
-      messages.push(payload);
-      writeJson(STORAGE.messages, messages);
-      form.reset();
-      const status = document.querySelector("[data-feedback-status]");
-      status.textContent = "Сообщение сохранено. Спасибо, " + payload.name + "!";
-      status.className = "form-status is-ok";
-      toast("Обратная связь отправлена");
+      status.textContent = "Отправляем…";
+      status.className = "form-status";
+      try {
+        await api("/api/feedback", {
+          method: "POST",
+          body: JSON.stringify(payload),
+        });
+        form.reset();
+        status.textContent = "Сообщение сохранено в базу. Спасибо, " + payload.name + "!";
+        status.className = "form-status is-ok";
+        toast("Обратная связь отправлена");
+      } catch (error) {
+        status.textContent = error.message || "Не удалось отправить сообщение.";
+        status.className = "form-status is-error";
+      }
     });
   }
 

@@ -62,6 +62,10 @@
             <strong data-stat-orders>0</strong>
           </div>
           <div class="db-stat">
+            <span class="muted">Обратная связь</span>
+            <strong data-stat-feedback>0</strong>
+          </div>
+          <div class="db-stat">
             <span class="muted">Сумма заявок</span>
             <strong data-stat-total>0 ₽</strong>
           </div>
@@ -108,6 +112,27 @@
                 </tr>
               </thead>
               <tbody id="orders-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section db-section">
+        <h2 class="section-title">feedback</h2>
+        <div class="panel db-panel">
+          <div class="db-scroll">
+            <table class="build-table db-table">
+              <thead>
+                <tr>
+                  <th scope="col">id</th>
+                  <th scope="col">name</th>
+                  <th scope="col">email</th>
+                  <th scope="col">topic</th>
+                  <th scope="col">message</th>
+                  <th scope="col">created_at</th>
+                </tr>
+              </thead>
+              <tbody id="feedback-body"></tbody>
             </table>
           </div>
         </div>
@@ -161,23 +186,27 @@
       status.textContent = "Загрузка…";
       status.className = "form-status";
       try {
-        const [usersResp, ordersResp] = await Promise.all([
+        const [usersResp, ordersResp, feedbackResp] = await Promise.all([
           fetch("/api/users?admin_id=" + session.id),
           fetch("/api/orders?admin_id=" + session.id),
+          fetch("/api/feedback?admin_id=" + session.id),
         ]);
-        if (!usersResp.ok || !ordersResp.ok) {
+        if (!usersResp.ok || !ordersResp.ok || !feedbackResp.ok) {
           throw new Error("Нет доступа или сервер недоступен");
         }
         const usersData = await usersResp.json();
         const ordersData = await ordersResp.json();
+        const feedbackData = await feedbackResp.json();
         const users = usersData.users || [];
         const orders = ordersData.orders || [];
+        const feedback = feedbackData.feedback || [];
         const total = orders.reduce(function (sum, order) {
           return sum + (Number(order.total) || 0);
         }, 0);
 
         document.querySelector("[data-stat-users]").textContent = String(users.length);
         document.querySelector("[data-stat-orders]").textContent = String(orders.length);
+        document.querySelector("[data-stat-feedback]").textContent = String(feedback.length);
         document.querySelector("[data-stat-total]").textContent =
           new Intl.NumberFormat("ru-RU").format(total) + " ₽";
 
@@ -208,6 +237,22 @@
               "<td>" + new Intl.NumberFormat("ru-RU").format(order.total) + " ₽</td>" +
               "<td>" + (items || "—") + "</td>" +
               "<td>" + order.created_at + "</td>" +
+              "</tr>"
+            );
+          })
+          .join("") || "<tr><td colspan='6'>Пусто</td></tr>";
+
+        document.getElementById("feedback-body").innerHTML = feedback
+          .map(function (item) {
+            const msg = String(item.message || "").replace(/</g, "&lt;");
+            return (
+              "<tr>" +
+              "<td>" + item.id + "</td>" +
+              "<td>" + item.name + "</td>" +
+              "<td>" + item.email + "</td>" +
+              "<td>" + (item.topic || "—") + "</td>" +
+              "<td style='white-space:normal;max-width:28rem'>" + msg + "</td>" +
+              "<td>" + item.created_at + "</td>" +
               "</tr>"
             );
           })

@@ -782,6 +782,14 @@ textarea:focus-visible {
   margin-top: 0.2rem;
 }
 
+body:not(.admin-logged-in) .nav-bd-item {
+  display: none !important;
+}
+
+body.admin-logged-in .nav-bd-item {
+  display: list-item !important;
+}
+
 .admin-tabs {
   display: flex;
   flex-wrap: wrap;

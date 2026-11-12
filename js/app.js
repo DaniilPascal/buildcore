@@ -146,8 +146,13 @@
     if (session) {
       toggleBtn.textContent = "Выйти";
       toggleBtn.setAttribute("data-auth-mode", "logout");
-      chip.hidden = false;
-      chip.textContent = session.is_admin ? "Администратор" : session.name;
+      if (session.is_admin) {
+        chip.hidden = true;
+        chip.textContent = "";
+      } else {
+        chip.hidden = false;
+        chip.textContent = session.name;
+      }
       const adminLink = document.querySelector("[data-admin-link]");
       if (adminLink) adminLink.hidden = !session.is_admin;
     } else {

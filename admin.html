@@ -22,8 +22,8 @@
           <li><a href="catalog.html">Каталог</a></li>
           <li><a href="cart.html">Сборка</a></li>
           <li><a href="contacts.html">Контакты</a></li>
-          <li><a href="admin.html" aria-current="page">Панель</a></li>
-          <li id="nav-bd" hidden><a href="#bd" data-admin-tab="bd">БД</a></li>
+          <li><a href="admin.html" data-admin-tab="home" id="nav-panel">Панель</a></li>
+          <li class="nav-bd-item" id="nav-bd"><a href="#bd" data-admin-tab="bd">БД</a></li>
         </ul>
       </nav>
     </div>
@@ -142,13 +142,23 @@
     function showDashboard(show) {
       document.getElementById("admin-login-panel").hidden = show;
       document.getElementById("admin-dashboard").hidden = !show;
-      document.getElementById("nav-bd").hidden = !show;
+      document.body.classList.toggle("admin-logged-in", show);
+      const chip = document.querySelector("[data-user-chip]");
+      if (chip) {
+        chip.hidden = true;
+        chip.textContent = "";
+      }
     }
 
     function setAdminTab(tab) {
       document.querySelectorAll("[data-admin-tab]").forEach(function (el) {
         if (el.tagName === "BUTTON" || el.tagName === "A") {
-          el.classList.toggle("is-active", el.getAttribute("data-admin-tab") === tab);
+          const active = el.getAttribute("data-admin-tab") === tab;
+          el.classList.toggle("is-active", active);
+          if (el.tagName === "A") {
+            if (active) el.setAttribute("aria-current", "page");
+            else el.removeAttribute("aria-current");
+          }
         }
       });
       document.querySelectorAll("[data-admin-pane]").forEach(function (pane) {
@@ -243,9 +253,6 @@
         status.className = "form-status is-ok";
         showDashboard(true);
         setAdminTab("home");
-        if (window.BuildCore !== undefined) {
-          // refresh header chip via app.js if loaded
-        }
         location.hash = "";
       } catch (error) {
         status.textContent = error.message;

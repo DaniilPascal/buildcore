@@ -704,11 +704,11 @@ textarea:focus-visible {
 
 .modal-dialog {
   position: relative;
-  width: min(100%, 360px);
+  width: min(100%, 460px);
   background: var(--bg-elevated);
   border: 1px solid var(--line);
   border-radius: 20px;
-  padding: 1.5rem 1.25rem 1.35rem;
+  padding: 1.5rem 1.35rem 1.4rem;
   box-shadow: var(--shadow);
 }
 
@@ -771,9 +771,46 @@ textarea:focus-visible {
   gap: 0.8rem;
 }
 
+.auth-form[hidden],
+.auth-pane[hidden],
+.admin-pane[hidden] {
+  display: none !important;
+}
+
 .auth-form .button {
   width: 100%;
   margin-top: 0.2rem;
+}
+
+.admin-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 1.2rem;
+}
+
+.admin-tabs a,
+.admin-tabs button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.admin-tabs a.is-active,
+.admin-tabs a[aria-current="page"],
+.admin-tabs button.is-active {
+  background: var(--accent-soft);
+  color: var(--text);
+  border-color: transparent;
 }
 
 .form-status {

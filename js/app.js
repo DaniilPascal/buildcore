@@ -101,24 +101,28 @@
         '<div class="modal-backdrop" data-auth-close></div>' +
         '<div class="modal-dialog auth-dialog" role="dialog" aria-modal="true" aria-labelledby="auth-title">' +
         '<button type="button" class="modal-close" data-auth-close aria-label="Закрыть">×</button>' +
-        '<h2 id="auth-title">Вход</h2>' +
+        '<h2 id="auth-title">Аккаунт</h2>' +
         '<div class="auth-tabs" role="tablist">' +
         '<button type="button" class="auth-tab is-active" data-auth-tab="login" role="tab" aria-selected="true">Вход</button>' +
         '<button type="button" class="auth-tab" data-auth-tab="register" role="tab" aria-selected="false">Регистрация</button>' +
         "</div>" +
+        '<div class="auth-pane" data-auth-pane="login">' +
         '<form id="login-form" class="auth-form">' +
         '<div class="field"><label for="login-email">Email или логин</label><input id="login-email" type="text" required placeholder="you@example.com"></div>' +
         '<div class="field"><label for="login-password">Пароль</label><input id="login-password" type="password" required minlength="4"></div>' +
         '<button class="button button-primary" type="submit">Войти</button>' +
         '<p class="form-status" data-login-status></p>' +
         "</form>" +
-        '<form id="register-form" class="auth-form" hidden>' +
+        "</div>" +
+        '<div class="auth-pane" data-auth-pane="register" hidden>' +
+        '<form id="register-form" class="auth-form">' +
         '<div class="field"><label for="register-name">Имя</label><input id="register-name" type="text" required minlength="2"></div>' +
         '<div class="field"><label for="register-email">Email</label><input id="register-email" type="email" required></div>' +
         '<div class="field"><label for="register-password">Пароль</label><input id="register-password" type="password" required minlength="4"></div>' +
         '<button class="button button-primary" type="submit">Создать аккаунт</button>' +
         '<p class="form-status" data-register-status></p>' +
         "</form>" +
+        "</div>" +
         "</div>";
       document.body.appendChild(modal);
     }
@@ -143,7 +147,7 @@
       toggleBtn.textContent = "Выйти";
       toggleBtn.setAttribute("data-auth-mode", "logout");
       chip.hidden = false;
-      chip.textContent = session.is_admin ? session.name + " · админ" : session.name;
+      chip.textContent = session.is_admin ? "Администратор" : session.name;
       const adminLink = document.querySelector("[data-admin-link]");
       if (adminLink) adminLink.hidden = !session.is_admin;
     } else {
@@ -162,10 +166,9 @@
       btn.classList.toggle("is-active", active);
       btn.setAttribute("aria-selected", active ? "true" : "false");
     });
-    const title = document.getElementById("auth-title");
-    if (title) title.textContent = mode === "register" ? "Регистрация" : "Вход";
-    document.getElementById("login-form").hidden = mode !== "login";
-    document.getElementById("register-form").hidden = mode !== "register";
+    document.querySelectorAll("[data-auth-pane]").forEach(function (pane) {
+      pane.hidden = pane.getAttribute("data-auth-pane") !== mode;
+    });
   }
 
   function openAuthModal() {

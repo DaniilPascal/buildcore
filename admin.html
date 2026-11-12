@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Админ-панель — BuildCore</title>
+  <title>Панель управления — BuildCore</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -22,20 +22,19 @@
           <li><a href="catalog.html">Каталог</a></li>
           <li><a href="cart.html">Сборка</a></li>
           <li><a href="contacts.html">Контакты</a></li>
-          <li><a href="admin.html" aria-current="page">Админ</a></li>
+          <li><a href="admin.html" aria-current="page">Панель</a></li>
+          <li id="nav-bd" hidden><a href="#bd" data-admin-tab="bd">БД</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
   <main class="container">
-    <div class="page-intro">
-      <h1>Админ-панель</h1>
-      <p>Управление клиентами и заявками на сборку.</p>
-    </div>
-
     <section class="panel" id="admin-login-panel">
-      <h2 class="section-title">Вход для администратора</h2>
+      <div class="page-intro" style="padding-top: 0;">
+        <h1>Вход в панель</h1>
+        <p>Доступ только для сотрудников магазина.</p>
+      </div>
       <form id="admin-login-form" class="auth-form">
         <div class="field">
           <label for="admin-login">Логин</label>
@@ -51,47 +50,68 @@
     </section>
 
     <div id="admin-dashboard" hidden>
-      <div class="actions" style="margin-bottom: 1rem;">
-        <button type="button" class="button button-secondary" id="reload-admin">Обновить данные</button>
-        <button type="button" class="button button-secondary" id="admin-logout">Выйти</button>
+      <div class="admin-tabs" role="tablist">
+        <button type="button" class="is-active" data-admin-tab="home" role="tab">Обзор</button>
+        <button type="button" data-admin-tab="bd" role="tab">БД</button>
       </div>
-      <p class="form-status" data-admin-status></p>
 
-      <section class="section">
-        <h2 class="section-title">Клиенты</h2>
-        <div class="panel">
-          <table class="build-table">
-            <thead>
-              <tr>
-                <th scope="col">№</th>
-                <th scope="col">Имя</th>
-                <th scope="col">Email</th>
-                <th scope="col">Роль</th>
-                <th scope="col">Дата</th>
-              </tr>
-            </thead>
-            <tbody id="users-body"></tbody>
-          </table>
+      <section class="admin-pane" data-admin-pane="home">
+        <div class="page-intro" style="padding-top: 0;">
+          <h1>Панель управления</h1>
+          <p>Откройте вкладку <strong>БД</strong>, чтобы посмотреть клиентов и заявки.</p>
+        </div>
+        <div class="actions">
+          <button type="button" class="button button-primary" data-admin-tab="bd">Открыть БД</button>
+          <button type="button" class="button button-secondary" id="admin-logout">Выйти</button>
         </div>
       </section>
 
-      <section class="section">
-        <h2 class="section-title">Заявки на сборку</h2>
-        <div class="panel">
-          <table class="build-table">
-            <thead>
-              <tr>
-                <th scope="col">№</th>
-                <th scope="col">Клиент</th>
-                <th scope="col">Телефон</th>
-                <th scope="col">Сумма</th>
-                <th scope="col">Состав</th>
-                <th scope="col">Дата</th>
-              </tr>
-            </thead>
-            <tbody id="orders-body"></tbody>
-          </table>
+      <section class="admin-pane" data-admin-pane="bd" hidden>
+        <div class="page-intro" style="padding-top: 0;">
+          <h1>БД</h1>
+          <p>Клиенты и заявки на сборку.</p>
         </div>
+        <div class="actions" style="margin-bottom: 1rem;">
+          <button type="button" class="button button-secondary" id="reload-admin">Обновить</button>
+        </div>
+        <p class="form-status" data-admin-status></p>
+
+        <section class="section">
+          <h2 class="section-title">Клиенты</h2>
+          <div class="panel">
+            <table class="build-table">
+              <thead>
+                <tr>
+                  <th scope="col">№</th>
+                  <th scope="col">Имя</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Роль</th>
+                  <th scope="col">Дата</th>
+                </tr>
+              </thead>
+              <tbody id="users-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">Заявки на сборку</h2>
+          <div class="panel">
+            <table class="build-table">
+              <thead>
+                <tr>
+                  <th scope="col">№</th>
+                  <th scope="col">Клиент</th>
+                  <th scope="col">Телефон</th>
+                  <th scope="col">Сумма</th>
+                  <th scope="col">Состав</th>
+                  <th scope="col">Дата</th>
+                </tr>
+              </thead>
+              <tbody id="orders-body"></tbody>
+            </table>
+          </div>
+        </section>
       </section>
     </div>
   </main>
@@ -122,6 +142,19 @@
     function showDashboard(show) {
       document.getElementById("admin-login-panel").hidden = show;
       document.getElementById("admin-dashboard").hidden = !show;
+      document.getElementById("nav-bd").hidden = !show;
+    }
+
+    function setAdminTab(tab) {
+      document.querySelectorAll("[data-admin-tab]").forEach(function (el) {
+        if (el.tagName === "BUTTON" || el.tagName === "A") {
+          el.classList.toggle("is-active", el.getAttribute("data-admin-tab") === tab);
+        }
+      });
+      document.querySelectorAll("[data-admin-pane]").forEach(function (pane) {
+        pane.hidden = pane.getAttribute("data-admin-pane") !== tab;
+      });
+      if (tab === "bd") loadAdminData();
     }
 
     async function loadAdminData() {
@@ -131,7 +164,6 @@
         showDashboard(false);
         return;
       }
-      showDashboard(true);
       status.textContent = "Загрузка…";
       status.className = "form-status";
       try {
@@ -152,7 +184,7 @@
               "<td>" + user.id + "</td>" +
               "<td>" + user.name + "</td>" +
               "<td>" + user.email + "</td>" +
-              "<td>" + (user.is_admin ? "Админ" : "Клиент") + "</td>" +
+              "<td>" + (user.is_admin ? "Сотрудник" : "Клиент") + "</td>" +
               "<td>" + user.created_at + "</td>" +
               "</tr>"
             );
@@ -201,18 +233,33 @@
         });
         const data = await response.json();
         if (!response.ok) {
-          throw new Error(data.detail || "Неверный логин или пароль");
+          throw new Error(typeof data.detail === "string" ? data.detail : "Неверный логин или пароль");
         }
         if (!data.user.is_admin) {
-          throw new Error("Этот аккаунт не является администратором");
+          throw new Error("Этот аккаунт не является сотрудником");
         }
         setSession(data.user);
         status.textContent = "Вход выполнен";
         status.className = "form-status is-ok";
-        loadAdminData();
+        showDashboard(true);
+        setAdminTab("home");
+        if (window.BuildCore !== undefined) {
+          // refresh header chip via app.js if loaded
+        }
+        location.hash = "";
       } catch (error) {
         status.textContent = error.message;
         status.className = "form-status is-error";
+      }
+    });
+
+    document.addEventListener("click", function (event) {
+      const tab = event.target.closest("[data-admin-tab]");
+      if (!tab) return;
+      event.preventDefault();
+      setAdminTab(tab.getAttribute("data-admin-tab"));
+      if (tab.getAttribute("data-admin-tab") === "bd") {
+        location.hash = "bd";
       }
     });
 
@@ -220,12 +267,17 @@
     document.getElementById("admin-logout").addEventListener("click", function () {
       setSession(null);
       showDashboard(false);
+      location.hash = "";
     });
 
     document.addEventListener("DOMContentLoaded", function () {
       const session = getSession();
-      if (session && session.is_admin) loadAdminData();
-      else showDashboard(false);
+      if (session && session.is_admin) {
+        showDashboard(true);
+        setAdminTab(location.hash === "#bd" ? "bd" : "home");
+      } else {
+        showDashboard(false);
+      }
     });
   </script>
 </body>

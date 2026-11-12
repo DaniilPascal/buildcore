@@ -76,12 +76,12 @@ def init_db() -> None:
         if admin:
             conn.execute(
                 "UPDATE users SET name = ?, email = ?, password = ?, is_admin = 1 WHERE id = ?",
-                ("admin", admin_email, admin_pass, admin["id"]),
+                ("Администратор", admin_email, admin_pass, admin["id"]),
             )
         else:
             conn.execute(
                 "INSERT INTO users (name, email, password, is_admin) VALUES (?, ?, ?, 1)",
-                ("admin", admin_email, admin_pass),
+                ("Администратор", admin_email, admin_pass),
             )
         conn.commit()
     finally:

@@ -2,22 +2,39 @@
 
 **Вариант 1.** Подбор комплектующих для компьютера.
 
-Сайт для сборки конфигурации ПК с каталогом, динамической сборкой, авторизацией и заявками в SQLite.
-
-## Онлайн (ПР 4)
-
-**Рабочий адрес с HTTPS:**  
-https://4584f39f417f2d.lhr.life
-
-Демо-аккаунт: `demo@buildcore.local` / `demo1234`
+Сайт для сборки конфигурации ПК: каталог, динамическая сборка, авторизация и заявки в SQLite.
 
 Репозиторий: https://github.com/DaniilPascal/buildcore
 
-> Текущий публичный URL поднят через удалённый HTTPS-туннель к серверу приложения.  
-> Для постоянного адреса на Render (как у учебных проектов на `*.onrender.com`) зайдите в аккаунт Render и создайте Web Service из этого репозитория — конфиг уже готов (`Dockerfile`, `render.yaml`).
+## Деплой на Render (нужно сделать тебе)
 
-Однокнопочный деплой:  
-https://render.com/deploy?repo=https://github.com/DaniilPascal/buildcore
+Автоматически задеплоить не получается: Render просит вход и проходит hCaptcha — это только вручную.
+
+### Что сделать
+
+1. Открой ссылку:  
+   https://render.com/deploy?repo=https://github.com/DaniilPascal/buildcore
+2. Войди через **GitHub** (аккаунт `DaniilPascal`).
+3. Пройди captcha / подтверди доступ Render к репозиторию, если спросит.
+4. Нажми **Apply** / **Create Web Service**.
+5. Дождись окончания Build (обычно 3–8 минут).
+6. Открой выданный адрес вида `https://buildcore.onrender.com`.
+
+Если Blueprint не сработает, создай сервис вручную:
+
+1. [dashboard.render.com](https://dashboard.render.com) → **New +** → **Web Service**
+2. Подключи репозиторий `DaniilPascal/buildcore`
+3. Настройки:
+   - **Language / Runtime:** Docker  
+     (или Python, тогда Start Command: `uvicorn server:app --host 0.0.0.0 --port $PORT`)
+   - **Branch:** `main`
+   - **Instance type:** Free
+   - **Health Check Path:** `/api/health`
+4. **Create Web Service** → дождись Deploy Live
+
+Демо-аккаунт на сайте: `demo@buildcore.local` / `demo1234`
+
+После деплоя пришли мне URL — пропишу его в README.
 
 ## Локальный запуск
 
@@ -29,46 +46,19 @@ pip install -r requirements.txt
 python server.py
 ```
 
-Откройте [http://127.0.0.1:8000](http://127.0.0.1:8000)
+Открой http://127.0.0.1:8000
 
-## Docker (ПР 4)
+## Docker
 
 ```bash
 docker compose up --build
 ```
 
-Или:
-
-```bash
-docker build -t buildcore .
-docker run --rm -p 8000:8000 -e PORT=8000 buildcore
-```
-
-## Деплой на Render (постоянный HTTPS)
-
-1. Откройте [render.com](https://render.com) и войдите (удобно через GitHub).
-2. New → Blueprint / Web Service → репозиторий `DaniilPascal/buildcore`.
-3. Runtime: **Docker** (берётся `Dockerfile`).
-4. Health check path: `/api/health`.
-5. После сборки появится адрес вида `https://buildcore.onrender.com`.
-
-Альтернатива без Docker: start command  
-`uvicorn server:app --host 0.0.0.0 --port $PORT`
-
 ## Что сделано по практикам
 
 | ПР | Содержание |
 |---|---|
-| 1 | HTML/CSS, 5+ страниц, адаптив, каталог |
+| 1 | HTML/CSS, страницы, адаптив, каталог |
 | 2 | JavaScript, формы, сборка, ЦБ РФ / карта / погода |
-| 3 | FastAPI + SQLite (`users`, `orders`), страница БД |
-| 4 | Dockerfile, Compose, GitHub, публичный HTTPS |
-
-## Быстрая проверка онлайн
-
-1. Откройте сайт по HTTPS-ссылке выше.
-2. Войдите демо-аккаунтом или зарегистрируйтесь.
-3. Добавьте комплектующие в сборку и оформите заявку.
-4. Откройте `/db.html` — записи из SQLite видны в таблицах.
-
-На бесплатном Render сервис может «засыпать» без трафика; первый запрос после паузы бывает дольше обычного.
+| 3 | FastAPI + SQLite (`users`, `orders`) |
+| 4 | Dockerfile, Compose, GitHub, деплой на Render |

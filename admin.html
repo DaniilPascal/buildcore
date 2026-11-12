@@ -23,7 +23,7 @@
           <li><a href="cart.html">Сборка</a></li>
           <li><a href="contacts.html">Контакты</a></li>
           <li><a href="admin.html" data-admin-tab="home" id="nav-panel">Панель</a></li>
-          <li class="nav-bd-item" id="nav-bd"><a href="#bd" data-admin-tab="bd">БД</a></li>
+          <li class="nav-bd-item" id="nav-bd"><a href="admin.html#bd" data-admin-tab="bd">БД</a></li>
         </ul>
       </nav>
     </div>
@@ -252,8 +252,7 @@
         status.textContent = "Вход выполнен";
         status.className = "form-status is-ok";
         showDashboard(true);
-        setAdminTab("home");
-        location.hash = "";
+        setAdminTab(location.hash === "#bd" ? "bd" : "home");
       } catch (error) {
         status.textContent = error.message;
         status.className = "form-status is-error";

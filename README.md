@@ -4,37 +4,15 @@
 
 Сайт для сборки конфигурации ПК: каталог, динамическая сборка, авторизация и заявки в SQLite.
 
+## Онлайн
+
+**Сайт:** https://buildcore-ex9h.onrender.com  
+
 Репозиторий: https://github.com/DaniilPascal/buildcore
 
-## Деплой на Render (нужно сделать тебе)
+Админ: `/admin.html` · логин `admin` · пароль `123456`
 
-Автоматически задеплоить не получается: Render просит вход и проходит hCaptcha — это только вручную.
-
-### Что сделать
-
-1. Открой ссылку:  
-   https://render.com/deploy?repo=https://github.com/DaniilPascal/buildcore
-2. Войди через **GitHub** (аккаунт `DaniilPascal`).
-3. Пройди captcha / подтверди доступ Render к репозиторию, если спросит.
-4. Нажми **Apply** / **Create Web Service**.
-5. Дождись окончания Build (обычно 3–8 минут).
-6. Открой выданный адрес вида `https://buildcore.onrender.com`.
-
-Если Blueprint не сработает, создай сервис вручную:
-
-1. [dashboard.render.com](https://dashboard.render.com) → **New +** → **Web Service**
-2. Подключи репозиторий `DaniilPascal/buildcore`
-3. Настройки:
-   - **Language / Runtime:** Docker  
-     (или Python, тогда Start Command: `uvicorn server:app --host 0.0.0.0 --port $PORT`)
-   - **Branch:** `main`
-   - **Instance type:** Free
-   - **Health Check Path:** `/api/health`
-4. **Create Web Service** → дождись Deploy Live
-
-Демо-аккаунт на сайте: `demo@buildcore.local` / `demo1234`
-
-После деплоя пришли мне URL — пропишу его в README.
+Если после пуша в GitHub сайт старый — в Render Dashboard нажми **Manual Deploy → Deploy latest commit**.
 
 ## Локальный запуск
 

@@ -108,7 +108,7 @@
         '<button type="button" class="auth-tab" data-auth-tab="register">Регистрация</button>' +
         "</div>" +
         '<form id="login-form" class="auth-form">' +
-        '<div class="field"><label for="login-email">Email</label><input id="login-email" type="email" required placeholder="you@example.com"></div>' +
+        '<div class="field"><label for="login-email">Email или логин</label><input id="login-email" type="text" required placeholder="you@example.com"></div>' +
         '<div class="field"><label for="login-password">Пароль</label><input id="login-password" type="password" required minlength="4"></div>' +
         '<button class="button button-primary" type="submit">Войти</button>' +
         '<p class="form-status" data-login-status></p>' +
@@ -145,8 +145,12 @@
       openBtn.hidden = true;
       logoutBtn.hidden = false;
       chip.hidden = false;
-      chip.textContent = session.name;
+      chip.textContent = session.is_admin ? session.name + " · админ" : session.name;
+      const adminLink = document.querySelector("[data-admin-link]");
+      if (adminLink) adminLink.hidden = !session.is_admin;
     } else {
+      const adminLink = document.querySelector("[data-admin-link]");
+      if (adminLink) adminLink.hidden = true;
       openBtn.hidden = false;
       logoutBtn.hidden = true;
       chip.hidden = true;

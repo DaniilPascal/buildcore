@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Админ-панель — BuildCore</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">
+        <img src="images/logo.svg" width="42" height="42" alt="Логотип BuildCore">
+        <span>BuildCore</span>
+      </a>
+      <nav class="site-nav" aria-label="Основное меню">
+        <ul>
+          <li><a href="index.html">Главная</a></li>
+          <li><a href="catalog.html">Каталог</a></li>
+          <li><a href="cart.html">Сборка</a></li>
+          <li><a href="contacts.html">Контакты</a></li>
+          <li><a href="admin.html" aria-current="page">Админ</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-intro">
+      <h1>Админ-панель</h1>
+      <p>Управление клиентами и заявками на сборку.</p>
+    </div>
+
+    <section class="panel" id="admin-login-panel">
+      <h2 class="section-title">Вход для администратора</h2>
+      <form id="admin-login-form" class="auth-form">
+        <div class="field">
+          <label for="admin-login">Логин</label>
+          <input id="admin-login" type="text" required placeholder="admin" autocomplete="username">
+        </div>
+        <div class="field">
+          <label for="admin-password">Пароль</label>
+          <input id="admin-password" type="password" required minlength="4" autocomplete="current-password">
+        </div>
+        <button class="button button-primary" type="submit">Войти</button>
+        <p class="form-status" data-admin-login-status></p>
+      </form>
+    </section>
+
+    <div id="admin-dashboard" hidden>
+      <div class="actions" style="margin-bottom: 1rem;">
+        <button type="button" class="button button-secondary" id="reload-admin">Обновить данные</button>
+        <button type="button" class="button button-secondary" id="admin-logout">Выйти</button>
+      </div>
+      <p class="form-status" data-admin-status></p>
+
+      <section class="section">
+        <h2 class="section-title">Клиенты</h2>
+        <div class="panel">
+          <table class="build-table">
+            <thead>
+              <tr>
+                <th scope="col">№</th>
+                <th scope="col">Имя</th>
+                <th scope="col">Email</th>
+                <th scope="col">Роль</th>
+                <th scope="col">Дата</th>
+              </tr>
+            </thead>
+            <tbody id="users-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Заявки на сборку</h2>
+        <div class="panel">
+          <table class="build-table">
+            <thead>
+              <tr>
+                <th scope="col">№</th>
+                <th scope="col">Клиент</th>
+                <th scope="col">Телефон</th>
+                <th scope="col">Сумма</th>
+                <th scope="col">Состав</th>
+                <th scope="col">Дата</th>
+              </tr>
+            </thead>
+            <tbody id="orders-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>BuildCore · подбор комплектующих для компьютера</p>
+      <p>Собери мощный ПК без угадываний</p>
+    </div>
+  </footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function getSession() {
+      try {
+        return JSON.parse(localStorage.getItem("buildcore_session") || "null");
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function setSession(user) {
+      if (user) localStorage.setItem("buildcore_session", JSON.stringify(user));
+      else localStorage.removeItem("buildcore_session");
+    }
+
+    function showDashboard(show) {
+      document.getElementById("admin-login-panel").hidden = show;
+      document.getElementById("admin-dashboard").hidden = !show;
+    }
+
+    async function loadAdminData() {
+      const session = getSession();
+      const status = document.querySelector("[data-admin-status]");
+      if (!session || !session.is_admin) {
+        showDashboard(false);
+        return;
+      }
+      showDashboard(true);
+      status.textContent = "Загрузка…";
+      status.className = "form-status";
+      try {
+        const [usersResp, ordersResp] = await Promise.all([
+          fetch("/api/users?admin_id=" + session.id),
+          fetch("/api/orders?admin_id=" + session.id),
+        ]);
+        if (!usersResp.ok || !ordersResp.ok) {
+          throw new Error("Нет доступа или сервер недоступен");
+        }
+        const usersData = await usersResp.json();
+        const ordersData = await ordersResp.json();
+
+        document.getElementById("users-body").innerHTML = (usersData.users || [])
+          .map(function (user) {
+            return (
+              "<tr>" +
+              "<td>" + user.id + "</td>" +
+              "<td>" + user.name + "</td>" +
+              "<td>" + user.email + "</td>" +
+              "<td>" + (user.is_admin ? "Админ" : "Клиент") + "</td>" +
+              "<td>" + user.created_at + "</td>" +
+              "</tr>"
+            );
+          })
+          .join("") || "<tr><td colspan='5'>Пока нет пользователей</td></tr>";
+
+        document.getElementById("orders-body").innerHTML = (ordersData.orders || [])
+          .map(function (order) {
+            const items = (order.items || [])
+              .map(function (item) { return item.name + " ×" + item.qty; })
+              .join(", ");
+            return (
+              "<tr>" +
+              "<td>" + order.id + "</td>" +
+              "<td>" + (order.user_name || order.user_id) + "<br><span class='muted'>" + (order.user_email || "") + "</span></td>" +
+              "<td>" + order.phone + "</td>" +
+              "<td>" + new Intl.NumberFormat("ru-RU").format(order.total) + " ₽</td>" +
+              "<td>" + items + "</td>" +
+              "<td>" + order.created_at + "</td>" +
+              "</tr>"
+            );
+          })
+          .join("") || "<tr><td colspan='6'>Пока нет заявок</td></tr>";
+
+        status.textContent = "Данные обновлены";
+        status.className = "form-status is-ok";
+      } catch (error) {
+        status.textContent = error.message || "Ошибка загрузки";
+        status.className = "form-status is-error";
+      }
+    }
+
+    document.getElementById("admin-login-form").addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const status = document.querySelector("[data-admin-login-status]");
+      status.textContent = "Проверяем…";
+      status.className = "form-status";
+      try {
+        const response = await fetch("/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: document.getElementById("admin-login").value.trim(),
+            password: document.getElementById("admin-password").value,
+          }),
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.detail || "Неверный логин или пароль");
+        }
+        if (!data.user.is_admin) {
+          throw new Error("Этот аккаунт не является администратором");
+        }
+        setSession(data.user);
+        status.textContent = "Вход выполнен";
+        status.className = "form-status is-ok";
+        loadAdminData();
+      } catch (error) {
+        status.textContent = error.message;
+        status.className = "form-status is-error";
+      }
+    });
+
+    document.getElementById("reload-admin").addEventListener("click", loadAdminData);
+    document.getElementById("admin-logout").addEventListener("click", function () {
+      setSession(null);
+      showDashboard(false);
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const session = getSession();
+      if (session && session.is_admin) loadAdminData();
+      else showDashboard(false);
+    });
+  </script>
+</body>
+</html>

@@ -1,6 +1,3 @@
--- BuildCore — ПР №3
--- СУБД: SQLite | не более двух таблиц
-
 PRAGMA foreign_keys = ON;
 
 -- 1. Пользователи (регистрация / авторизация)
@@ -9,6 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
     name       TEXT    NOT NULL,
     email      TEXT    NOT NULL UNIQUE,
     password   TEXT    NOT NULL,
+    is_admin   INTEGER NOT NULL DEFAULT 0,
     created_at TEXT    NOT NULL DEFAULT (datetime('now', 'localtime'))
 );
 

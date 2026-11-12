@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-BuildCore — ПР №3–4
-FastAPI + SQLite: авторизация и заявки на сборку.
+BuildCore — FastAPI + SQLite.
 
 Локально:
   python3 -m venv .venv
@@ -52,14 +51,37 @@ def init_db() -> None:
     conn = get_connection()
     try:
         conn.executescript(schema)
+        cols = [r[1] for r in conn.execute("PRAGMA table_info(users)").fetchall()]
+        if "is_admin" not in cols:
+            conn.execute(
+                "ALTER TABLE users ADD COLUMN is_admin INTEGER NOT NULL DEFAULT 0"
+            )
+
         demo = conn.execute(
             "SELECT id FROM users WHERE email = ?",
             ("demo@buildcore.local",),
         ).fetchone()
         if not demo:
             conn.execute(
-                "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
+                "INSERT INTO users (name, email, password, is_admin) VALUES (?, ?, ?, 0)",
                 ("Demo", "demo@buildcore.local", hash_password("demo1234")),
+            )
+
+        admin_email = "admin@buildcore.local"
+        admin_pass = hash_password("123456")
+        admin = conn.execute(
+            "SELECT id FROM users WHERE email = ? OR lower(name) = ?",
+            (admin_email, "admin"),
+        ).fetchone()
+        if admin:
+            conn.execute(
+                "UPDATE users SET name = ?, email = ?, password = ?, is_admin = 1 WHERE id = ?",
+                ("admin", admin_email, admin_pass, admin["id"]),
+            )
+        else:
+            conn.execute(
+                "INSERT INTO users (name, email, password, is_admin) VALUES (?, ?, ?, 1)",
+                ("admin", admin_email, admin_pass),
             )
         conn.commit()
     finally:
@@ -71,6 +93,7 @@ def user_to_dict(row: sqlite3.Row) -> dict[str, Any]:
         "id": row["id"],
         "name": row["name"],
         "email": row["email"],
+        "is_admin": int(row["is_admin"]) if "is_admin" in row.keys() else 0,
         "created_at": row["created_at"],
     }
 
@@ -135,7 +158,7 @@ def register(payload: RegisterIn) -> dict[str, Any]:
     try:
         try:
             cur = conn.execute(
-                "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
+                "INSERT INTO users (name, email, password, is_admin) VALUES (?, ?, ?, 0)",
                 (name, email, hash_password(payload.password)),
             )
             conn.commit()
@@ -154,30 +177,57 @@ def register(payload: RegisterIn) -> dict[str, Any]:
 
 @app.post("/api/login")
 def login(payload: LoginIn) -> dict[str, Any]:
-    email = payload.email.strip().lower()
+    login_value = payload.email.strip().lower()
     password = payload.password
-    if not email or not password:
-        raise HTTPException(status_code=400, detail="Заполните email и пароль")
+    if not login_value or not password:
+        raise HTTPException(status_code=400, detail="Заполните логин и пароль")
 
     conn = get_connection()
     try:
         row = conn.execute(
-            "SELECT * FROM users WHERE lower(email) = ? AND password = ?",
-            (email, hash_password(password)),
+            """
+            SELECT * FROM users
+            WHERE password = ?
+              AND (
+                lower(email) = ?
+                OR lower(name) = ?
+                OR lower(email) LIKE ?
+              )
+            """,
+            (
+                hash_password(password),
+                login_value,
+                login_value,
+                login_value + "@%",
+            ),
         ).fetchone()
         if not row:
-            raise HTTPException(status_code=401, detail="Неверный email или пароль")
+            raise HTTPException(status_code=401, detail="Неверный логин или пароль")
         return {"ok": True, "user": user_to_dict(row)}
     finally:
         conn.close()
 
 
+def require_admin(admin_id: int | None) -> sqlite3.Row:
+    if not admin_id:
+        raise HTTPException(status_code=401, detail="Нужен вход администратора")
+    conn = get_connection()
+    try:
+        row = conn.execute("SELECT * FROM users WHERE id = ?", (admin_id,)).fetchone()
+        if not row or not int(row["is_admin"] or 0):
+            raise HTTPException(status_code=403, detail="Доступ только для администратора")
+        return row
+    finally:
+        conn.close()
+
+
 @app.get("/api/users")
-def list_users() -> dict[str, Any]:
+def list_users(admin_id: int | None = None) -> dict[str, Any]:
+    require_admin(admin_id)
     conn = get_connection()
     try:
         rows = conn.execute(
-            "SELECT id, name, email, created_at FROM users ORDER BY id"
+            "SELECT id, name, email, is_admin, created_at FROM users ORDER BY id"
         ).fetchall()
         return {"ok": True, "users": [dict(row) for row in rows]}
     finally:
@@ -195,7 +245,7 @@ def create_order(payload: OrderIn) -> dict[str, Any]:
             "SELECT id FROM users WHERE id = ?", (payload.user_id,)
         ).fetchone()
         if not user:
-            raise HTTPException(status_code=401, detail="Пользователь не найден в БД")
+            raise HTTPException(status_code=401, detail="Пользователь не найден")
 
         cur = conn.execute(
             """
@@ -220,16 +270,17 @@ def create_order(payload: OrderIn) -> dict[str, Any]:
 
 
 @app.get("/api/orders")
-def list_orders(user_id: int | None = None) -> dict[str, Any]:
+def list_orders(admin_id: int | None = None, user_id: int | None = None) -> dict[str, Any]:
     conn = get_connection()
     try:
-        if user_id is not None:
+        if user_id is not None and admin_id is None:
             rows = conn.execute(
                 "SELECT * FROM orders WHERE user_id = ? ORDER BY id DESC",
                 (user_id,),
             ).fetchall()
             return {"ok": True, "orders": [order_to_dict(row) for row in rows]}
 
+        require_admin(admin_id)
         rows = conn.execute(
             """
             SELECT o.*, u.email AS user_email, u.name AS user_name

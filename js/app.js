@@ -147,13 +147,23 @@
         item = document.createElement("li");
         item.id = "nav-bd";
         item.className = "nav-bd-item";
-        item.innerHTML = '<a href="admin.html#bd">БД</a>';
+        item.innerHTML = '<a href="admin.html">БД</a>';
         navList.appendChild(item);
+      } else {
+        const link = item.querySelector("a");
+        if (link) {
+          link.href = "admin.html";
+          link.textContent = "БД";
+        }
       }
       item.hidden = false;
     } else if (item) {
       item.hidden = true;
     }
+
+    document.querySelectorAll("[data-admin-link]").forEach(function (el) {
+      el.hidden = true;
+    });
   }
 
   function updateAuthUi() {
@@ -173,16 +183,12 @@
         chip.textContent = session.name;
       }
       syncAdminNav(!!session.is_admin);
-      const adminLink = document.querySelector("[data-admin-link]");
-      if (adminLink) adminLink.hidden = !session.is_admin;
     } else {
       toggleBtn.textContent = "Войти";
       toggleBtn.setAttribute("data-auth-mode", "login");
       chip.hidden = true;
       chip.textContent = "";
       syncAdminNav(false);
-      const adminLink = document.querySelector("[data-admin-link]");
-      if (adminLink) adminLink.hidden = true;
     }
   }
 

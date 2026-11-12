@@ -7,7 +7,7 @@ BuildCore.PRODUCTS = [
     category: "cpu",
     categoryLabel: "CPU",
     price: 28990,
-    image: "images/cpu-i5.svg",
+    image: "images/cpu-i5.jpg",
     short: "14 ядер / 20 потоков, LGA1700",
     description:
       "Процессор для игровых и рабочих сборок среднего уровня. Подходит к платам LGA1700 и хорошо сочетается с видеокартами класса RTX 4070.",
@@ -26,7 +26,7 @@ BuildCore.PRODUCTS = [
     category: "cpu",
     categoryLabel: "CPU",
     price: 24490,
-    image: "images/cpu-r5.svg",
+    image: "images/cpu-r5.jpg",
     short: "6 ядер / 12 потоков, AM5",
     description: "Энергоэффективный процессор AM5 для игровых сборок без лишнего запаса по ядрам.",
     specs: {
@@ -44,7 +44,7 @@ BuildCore.PRODUCTS = [
     category: "gpu",
     categoryLabel: "GPU",
     price: 64990,
-    image: "images/gpu-4070.svg",
+    image: "images/gpu-4070.jpg",
     short: "12 ГБ GDDR6X",
     description: "Видеокарта для Full HD / 1440p с поддержкой DLSS 3 и трассировки лучей.",
     specs: {
@@ -60,7 +60,7 @@ BuildCore.PRODUCTS = [
     category: "gpu",
     categoryLabel: "GPU",
     price: 54990,
-    image: "images/gpu-7800.svg",
+    image: "images/gpu-7800.jpg",
     short: "16 ГБ GDDR6",
     description: "Альтернатива NVIDIA с большим объёмом памяти для высоких разрешений.",
     specs: {
@@ -76,7 +76,7 @@ BuildCore.PRODUCTS = [
     category: "ram",
     categoryLabel: "RAM",
     price: 11490,
-    image: "images/ram-32.svg",
+    image: "images/ram-32.jpg",
     short: "DDR5-6000, 2×16 ГБ",
     description: "Комплект быстрой DDR5 для платформ Intel 14-го поколения и AMD AM5.",
     specs: {
@@ -91,7 +91,7 @@ BuildCore.PRODUCTS = [
     category: "ram",
     categoryLabel: "RAM",
     price: 7290,
-    image: "images/ram-16.svg",
+    image: "images/ram-16.jpg",
     short: "DDR5-5600, 2×8 ГБ",
     description: "Базовый комплект памяти для старта сборки с возможностью апгрейда.",
     specs: {
@@ -106,7 +106,7 @@ BuildCore.PRODUCTS = [
     category: "mb",
     categoryLabel: "MB",
     price: 18490,
-    image: "images/mb-b650.svg",
+    image: "images/mb-b650.jpg",
     short: "Сокет AM5, DDR5",
     description: "Надёжная плата AM5 с усиленным питанием и радиаторами на VRM.",
     specs: {
@@ -122,7 +122,7 @@ BuildCore.PRODUCTS = [
     category: "mb",
     categoryLabel: "MB",
     price: 17990,
-    image: "images/mb-b760.svg",
+    image: "images/mb-b760.jpg",
     short: "Сокет LGA1700, DDR5",
     description: "Плата для процессоров Intel 12–14 поколений с удобной раскладкой разъёмов.",
     specs: {
@@ -138,7 +138,7 @@ BuildCore.PRODUCTS = [
     category: "ssd",
     categoryLabel: "SSD",
     price: 10990,
-    image: "images/ssd-990.svg",
+    image: "images/ssd-990.jpg",
     short: "NVMe PCIe 4.0",
     description: "Быстрый накопитель для системы и игр с высоким ресурсом записи.",
     specs: {
@@ -153,7 +153,7 @@ BuildCore.PRODUCTS = [
     category: "ssd",
     categoryLabel: "SSD",
     price: 16490,
-    image: "images/ssd-sn850.svg",
+    image: "images/ssd-sn850.jpg",
     short: "NVMe PCIe 4.0",
     description: "Ёмкий SSD для большой библиотеки игр и рабочих проектов.",
     specs: {
@@ -168,7 +168,7 @@ BuildCore.PRODUCTS = [
     category: "psu",
     categoryLabel: "PSU",
     price: 9990,
-    image: "images/psu-750.svg",
+    image: "images/psu-750.jpg",
     short: "750 Вт, 80+ Gold",
     description: "Модульный блок питания с запасом для сборки на RTX 4070 Super.",
     specs: {
@@ -183,7 +183,7 @@ BuildCore.PRODUCTS = [
     category: "psu",
     categoryLabel: "PSU",
     price: 12490,
-    image: "images/psu-850.svg",
+    image: "images/psu-850.jpg",
     short: "850 Вт, 80+ Gold",
     description: "Тихий блок питания с запасом под более мощные видеокарты.",
     specs: {
@@ -198,7 +198,7 @@ BuildCore.PRODUCTS = [
     category: "case",
     categoryLabel: "Case",
     price: 8990,
-    image: "images/case-h5.svg",
+    image: "images/case-h5.jpg",
     short: "Mid-Tower, хорошая вентиляция",
     description: "Корпус с сетчатой передней панелью и удобной прокладкой кабелей.",
     specs: {
@@ -213,7 +213,7 @@ BuildCore.PRODUCTS = [
     category: "cooler",
     categoryLabel: "Cooler",
     price: 5490,
-    image: "images/cooler-ak620.svg",
+    image: "images/cooler-ak620.jpg",
     short: "Двухбашенный воздушный кулер",
     description: "Эффективное воздушное охлаждение для процессоров с TDP до 260 Вт.",
     specs: {

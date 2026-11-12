@@ -232,7 +232,7 @@
             body: JSON.stringify({ name: name, email: email, password: password }),
           });
           setSession(data.user);
-          status.textContent = "Аккаунт создан в базе данных.";
+          status.textContent = "Аккаунт создан.";
           status.className = "form-status is-ok";
           updateAuthUi();
           toast("Регистрация успешна");
@@ -394,7 +394,7 @@
       addToCart(product.id, qty);
       const status = document.querySelector("[data-buy-status]");
       status.textContent = note
-        ? "Добавлено. Комментарий сохранён локально: " + note
+        ? "Добавлено. Комментарий: " + note
         : "Позиция добавлена в сборку.";
       status.className = "form-status is-ok";
       if (note) {
@@ -512,7 +512,7 @@
         const discount = total >= 100000 ? Math.round(total * 0.08) : 0;
         const pay = total - discount;
 
-        status.textContent = "Сохраняем заявку в SQLite…";
+        status.textContent = "Отправляем заявку…";
         status.className = "form-status";
         try {
           await api("/api/orders", {
@@ -527,9 +527,9 @@
           });
           setCart([]);
           form.reset();
-          status.textContent = "Заявка сохранена в базе данных. Смотрите страницу «БД».";
+          status.textContent = "Заявка принята. Мы свяжемся с вами для подтверждения.";
           status.className = "form-status is-ok";
-          toast("Заявка сохранена на сервере");
+          toast("Заявка отправлена");
           draw();
         } catch (error) {
           status.textContent = error.message || "Не удалось сохранить заявку.";

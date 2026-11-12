@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>База данных — BuildCore</title>
+  <title>Заявки — BuildCore</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
           <li><a href="product.html">Товар</a></li>
           <li><a href="cart.html">Сборка</a></li>
           <li><a href="contacts.html">Контакты</a></li>
-          <li><a href="db.html" aria-current="page">БД</a></li>
+          <li><a href="db.html" aria-current="page">Заявки</a></li>
         </ul>
       </nav>
     </div>
@@ -31,8 +31,8 @@
 
   <main class="container">
     <div class="page-intro">
-      <h1>Содержимое SQLite</h1>
-      <p>Две таблицы: <code>users</code> и <code>orders</code>. Данные подтягиваются через FastAPI.</p>
+      <h1>Клиенты и заявки</h1>
+      <p>Список зарегистрированных пользователей и оформленных сборок.</p>
       <div class="actions">
         <button type="button" class="button button-secondary" id="reload-db">Обновить</button>
       </div>
@@ -40,15 +40,15 @@
     </div>
 
     <section class="section">
-      <h2 class="section-title">users</h2>
+      <h2 class="section-title">Клиенты</h2>
       <div class="panel">
         <table class="build-table">
           <thead>
             <tr>
-              <th scope="col">id</th>
-              <th scope="col">name</th>
-              <th scope="col">email</th>
-              <th scope="col">created_at</th>
+              <th scope="col">№</th>
+              <th scope="col">Имя</th>
+              <th scope="col">Email</th>
+              <th scope="col">Дата</th>
             </tr>
           </thead>
           <tbody id="users-body"></tbody>
@@ -57,17 +57,17 @@
     </section>
 
     <section class="section">
-      <h2 class="section-title">orders</h2>
+      <h2 class="section-title">Заявки на сборку</h2>
       <div class="panel">
         <table class="build-table">
           <thead>
             <tr>
-              <th scope="col">id</th>
-              <th scope="col">user</th>
-              <th scope="col">phone</th>
-              <th scope="col">total</th>
-              <th scope="col">items</th>
-              <th scope="col">created_at</th>
+              <th scope="col">№</th>
+              <th scope="col">Клиент</th>
+              <th scope="col">Телефон</th>
+              <th scope="col">Сумма</th>
+              <th scope="col">Состав</th>
+              <th scope="col">Дата</th>
             </tr>
           </thead>
           <tbody id="orders-body"></tbody>
@@ -79,7 +79,7 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <p>BuildCore · подбор комплектующих для компьютера</p>
-      <p>Практическая работа №4 · деплой и HTTPS</p>
+      <p>Собери мощный ПК без угадываний</p>
     </div>
   </footer>
 
@@ -96,7 +96,7 @@
           fetch("/api/orders"),
         ]);
         if (!usersResp.ok || !ordersResp.ok) {
-          throw new Error("Сервер не ответил. Запустите python server.py");
+          throw new Error("Не удалось загрузить данные. Обновите страницу позже.");
         }
         const usersData = await usersResp.json();
         const ordersData = await ordersResp.json();
@@ -134,10 +134,10 @@
           })
           .join("") || "<tr><td colspan='6'>Пока нет заявок</td></tr>";
 
-        status.textContent = "Таблицы загружены из database/buildcore.db";
+        status.textContent = "Данные обновлены";
         status.className = "form-status is-ok";
       } catch (error) {
-        status.textContent = error.message || "Не удалось прочитать БД";
+        status.textContent = error.message || "Не удалось загрузить данные";
         status.className = "form-status is-error";
       }
     }

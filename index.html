@@ -23,7 +23,7 @@
           <li><a href="product.html">Товар</a></li>
           <li><a href="cart.html">Сборка</a></li>
           <li><a href="contacts.html">Контакты</a></li>
-          <li><a href="db.html">БД</a></li>
+          <li><a href="db.html">Заявки</a></li>
         </ul>
       </nav>
     </div>
@@ -32,25 +32,25 @@
   <main>
     <section class="container hero">
       <div class="hero-copy">
-        <p class="badge">Вариант 1 · ПР 4</p>
+        <p class="badge">Конфигуратор ПК</p>
         <h1>Соберите ПК из совместимых комплектующих</h1>
         <p class="lead">
           BuildCore помогает выбрать процессор, видеокарту, память и остальные детали
-          и сразу считать итоговую стоимость. Регистрация, вход и заявки на сборку
-          сохраняются на сервере FastAPI в базе SQLite.
+          и сразу увидеть итоговую стоимость. Сохраните сборку и оставьте заявку —
+          мы свяжемся и поможем с комплектацией.
         </p>
         <div class="hero-actions">
           <a class="button button-primary" href="catalog.html">Открыть каталог</a>
           <a class="button button-secondary" href="cart.html">Моя сборка</a>
         </div>
       </div>
-      <aside class="hero-panel" aria-label="Краткие цифры проекта">
-        <h2>Что уже работает</h2>
+      <aside class="hero-panel" aria-label="Краткие цифры">
+        <h2>BuildCore сегодня</h2>
         <ul class="stat-list">
           <li><span>Позиций в каталоге</span><strong>14</strong></li>
-          <li><span>Таблиц в SQLite</span><strong>2</strong></li>
-          <li><span>Сервер</span><strong>FastAPI</strong></li>
-          <li><span>Демо-вход</span><strong>demo@…</strong></li>
+          <li><span>Категорий</span><strong>7</strong></li>
+          <li><span>Средняя сборка</span><strong>~129 000 ₽</strong></li>
+          <li><span>Доставка по РФ</span><strong>да</strong></li>
         </ul>
         <div class="rates-box" data-rates>Загрузка курса ЦБ…</div>
       </aside>
@@ -66,7 +66,7 @@
       </div>
       <div class="cards">
         <article class="card">
-          <div class="card-media"><img src="images/cpu-i5.svg" alt="Процессор Intel Core i5-14600K"></div>
+          <div class="card-media"><img src="images/cpu-i5.jpg" alt="Процессор Intel Core i5-14600K"></div>
           <div class="card-body">
             <span class="badge">CPU</span>
             <h3>Intel Core i5-14600K</h3>
@@ -76,7 +76,7 @@
           </div>
         </article>
         <article class="card">
-          <div class="card-media"><img src="images/gpu-4070.svg" alt="Видеокарта NVIDIA GeForce RTX 4070 Super"></div>
+          <div class="card-media"><img src="images/gpu-4070.jpg" alt="Видеокарта NVIDIA GeForce RTX 4070 Super"></div>
           <div class="card-body">
             <span class="badge">GPU</span>
             <h3>GeForce RTX 4070 Super</h3>
@@ -86,7 +86,7 @@
           </div>
         </article>
         <article class="card">
-          <div class="card-media"><img src="images/ram-32.svg" alt="Оперативная память Kingston Fury 32 ГБ"></div>
+          <div class="card-media"><img src="images/ram-32.jpg" alt="Оперативная память Kingston Fury 32 ГБ"></div>
           <div class="card-body">
             <span class="badge">RAM</span>
             <h3>Kingston Fury 32 ГБ</h3>
@@ -96,7 +96,7 @@
           </div>
         </article>
         <article class="card">
-          <div class="card-media"><img src="images/ssd-990.svg" alt="Накопитель Samsung 990 PRO 1 ТБ"></div>
+          <div class="card-media"><img src="images/ssd-990.jpg" alt="Накопитель Samsung 990 PRO 1 ТБ"></div>
           <div class="card-body">
             <span class="badge">SSD</span>
             <h3>Samsung 990 PRO 1 ТБ</h3>
@@ -106,7 +106,7 @@
           </div>
         </article>
         <article class="card">
-          <div class="card-media"><img src="images/mb-b650.svg" alt="Материнская плата ASUS TUF B650-PLUS"></div>
+          <div class="card-media"><img src="images/mb-b650.jpg" alt="Материнская плата ASUS TUF B650-PLUS"></div>
           <div class="card-body">
             <span class="badge">MB</span>
             <h3>ASUS TUF B650-PLUS</h3>
@@ -116,7 +116,7 @@
           </div>
         </article>
         <article class="card">
-          <div class="card-media"><img src="images/psu-750.svg" alt="Блок питания Corsair RM750e"></div>
+          <div class="card-media"><img src="images/psu-750.jpg" alt="Блок питания Corsair RM750e"></div>
           <div class="card-body">
             <span class="badge">PSU</span>
             <h3>Corsair RM750e</h3>
@@ -132,21 +132,21 @@
       <div class="section-head">
         <div>
           <h2 class="section-title">Как работает подбор</h2>
-          <p>Сценарий варианта 1: сборка из нескольких частей и подсчёт суммы.</p>
+          <p>Соберите конфигурацию из нескольких частей и сразу посчитайте сумму.</p>
         </div>
       </div>
       <div class="features">
         <article class="feature">
           <h2>1. Отфильтруйте каталог</h2>
-          <p class="muted">Категория, цена, поиск и сортировка работают на JavaScript.</p>
+          <p class="muted">Категория, цена, поиск и сортировка помогают быстро найти нужную деталь.</p>
         </article>
         <article class="feature">
           <h2>2. Соберите конфигурацию</h2>
           <p class="muted">Добавляйте детали в сборку, меняйте количество и считайте итог.</p>
         </article>
         <article class="feature">
-          <h2>3. Войдите и оставьте заявку</h2>
-          <p class="muted">Регистрация и формы уже локальные; в ПР 3 данные уйдут в базу.</p>
+          <h2>3. Оставьте заявку</h2>
+          <p class="muted">Зарегистрируйтесь, сохраните сборку — менеджер подтвердит наличие и сроки.</p>
         </article>
       </div>
     </section>
@@ -155,7 +155,7 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <p>BuildCore · подбор комплектующих для компьютера</p>
-      <p>Практическая работа №4 · деплой и HTTPS</p>
+      <p>Собери мощный ПК без угадываний</p>
     </div>
   </footer>
 

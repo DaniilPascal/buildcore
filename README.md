@@ -7,7 +7,7 @@
 ## Онлайн (ПР 4)
 
 **Рабочий адрес с HTTPS:**  
-https://0591a7d8fb544d.lhr.life
+https://4584f39f417f2d.lhr.life
 
 Демо-аккаунт: `demo@buildcore.local` / `demo1234`
 

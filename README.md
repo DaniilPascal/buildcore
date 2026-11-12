@@ -6,8 +6,18 @@
 
 ## Онлайн (ПР 4)
 
-После деплоя сайт открывается по HTTPS-адресу Render (см. раздел ниже).  
+**Рабочий адрес с HTTPS:**  
+https://cbc270b53a6e5c.lhr.life
+
 Демо-аккаунт: `demo@buildcore.local` / `demo1234`
+
+Репозиторий: https://github.com/DaniilPascal/buildcore
+
+> Текущий публичный URL поднят через удалённый HTTPS-туннель к серверу приложения.  
+> Для постоянного адреса на Render (как у учебных проектов на `*.onrender.com`) зайдите в аккаунт Render и создайте Web Service из этого репозитория — конфиг уже готов (`Dockerfile`, `render.yaml`).
+
+Однокнопочный деплой:  
+https://render.com/deploy?repo=https://github.com/DaniilPascal/buildcore
 
 ## Локальный запуск
 
@@ -27,20 +37,20 @@ python server.py
 docker compose up --build
 ```
 
-Или без Compose:
+Или:
 
 ```bash
 docker build -t buildcore .
-docker run --rm -p 8000:8000 buildcore
+docker run --rm -p 8000:8000 -e PORT=8000 buildcore
 ```
 
-## Деплой на Render
+## Деплой на Render (постоянный HTTPS)
 
-1. Репозиторий подключён к GitHub.
-2. На [render.com](https://render.com) создайте Web Service из репозитория.
-3. Runtime: **Docker** (используется `Dockerfile` + `render.yaml`).
-4. Health check: `/api/health`.
-5. После сборки Render выдаёт адрес вида `https://buildcore.onrender.com`.
+1. Откройте [render.com](https://render.com) и войдите (удобно через GitHub).
+2. New → Blueprint / Web Service → репозиторий `DaniilPascal/buildcore`.
+3. Runtime: **Docker** (берётся `Dockerfile`).
+4. Health check path: `/api/health`.
+5. После сборки появится адрес вида `https://buildcore.onrender.com`.
 
 Альтернатива без Docker: start command  
 `uvicorn server:app --host 0.0.0.0 --port $PORT`
@@ -52,28 +62,13 @@ docker run --rm -p 8000:8000 buildcore
 | 1 | HTML/CSS, 5+ страниц, адаптив, каталог |
 | 2 | JavaScript, формы, сборка, ЦБ РФ / карта / погода |
 | 3 | FastAPI + SQLite (`users`, `orders`), страница БД |
-| 4 | Dockerfile, Compose, Render, HTTPS |
+| 4 | Dockerfile, Compose, GitHub, публичный HTTPS |
 
-## Структура
+## Быстрая проверка онлайн
 
-```
-Oleg/
-├── server.py
-├── Dockerfile
-├── docker-compose.yml
-├── render.yaml
-├── Procfile
-├── requirements.txt
-├── database/schema.sql
-├── js/ css/ images/
-└── *.html
-```
-
-## Быстрая проверка
-
-1. Откройте сайт по HTTPS.
-2. Зарегистрируйтесь / войдите.
-3. Добавьте детали в сборку и оформите заявку.
+1. Откройте сайт по HTTPS-ссылке выше.
+2. Войдите демо-аккаунтом или зарегистрируйтесь.
+3. Добавьте комплектующие в сборку и оформите заявку.
 4. Откройте `/db.html` — записи из SQLite видны в таблицах.
 
-> На бесплатном тарифе Render сервис «засыпает» без трафика ~15 минут, первый запрос может идти дольше. SQLite на бесплатном диске не персистентен между перезапусками — для учебной демонстрации этого достаточно.
+На бесплатном Render сервис может «засыпать» без трафика; первый запрос после паузы бывает дольше обычного.
